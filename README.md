@@ -1,10 +1,13 @@
-<<<<<<< HEAD
 # twine-monogatari
 Allows one to use Twine to create Visual Novels for the Monogatari engine.
 
 Work in progress.
 
+<!--
 [![Build Status](https://travis-ci.org/lazerwalker/twison.svg?branch=master)](https://travis-ci.org/lazerwalker/twison)
+-->
+
+Based on [Twison](https://github.com/lazerwalker/twison).
 
 Twison is a story format for [Twine 2](http://twinery.org/2) that simply exports to JSON.
 
