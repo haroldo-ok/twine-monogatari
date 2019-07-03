@@ -1,0 +1,28 @@
+{
+  "name": "Twison",
+  "version": "0.0.1",
+  "description": "Export your Twine 2 story as a JSON document",
+  "main": "format.js",
+  "scripts": {
+    "test": "cd test && mocha test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lazerwalker/twison"
+  },
+  "author": "Mike Lazer-Walker",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lazerwalker/twison/issues"
+  },
+  "homepage": "https://github.com/lazerwalker/twison",
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "express": "^4.13.3",
+    "jsdom": "^7.0.2",
+    "mocha": "^2.3.4",
+    "mocha-jsdom": "^1.0.0",
+    "uglify-js": "^2.6.1",
+    "watch": "^0.16.0"
+  }
+}
