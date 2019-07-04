@@ -1,4 +1,5 @@
 var fs = require('fs')
+var ncp = require('ncp');
 var Uglify = require('uglify-js')
 
 var package = JSON.parse(fs.readFileSync("package.json", "utf-8"))
@@ -23,4 +24,11 @@ fs.writeFile("dist/format.js", outputString, function(err) {
   } else {
     console.log("Successfully built story format to dist/format.js");
   }
+});
+
+ncp('Monogatari/dist', 'dist/Monogatari', function (err) {
+  if (err) {
+    return console.error("Error copying Monogatari engine", err);
+  } 
+  console.log('Successfully copied engine to dist/Monogatari/');
 });
