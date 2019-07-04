@@ -1,3 +1,5 @@
+'use strict'
+
 var Twison = {
   extractLinksFromText: function(text) {
     var links = text.match(/\[\[.+?\]\]/g)
@@ -20,6 +22,17 @@ var Twison = {
         }
       });
     }
+  },
+  
+  extractCommandsFromText: function(text) {
+    var lines = text.split(/[\r\n]+/g)
+      .map(function(s){ 
+        return s.replace(/\[\[.*?\]\]/g, '').trimEnd();
+      })
+      .filter(function(s) {
+        return s && s !== '&lt;p&gt;';
+      });
+    return lines;
   },
 
   convertPassage: function(passage) {
@@ -47,6 +60,11 @@ var Twison = {
 
     if (dict.tags) {
       dict.tags = dict.tags.split(" ");
+    }
+
+    var commands = Twison.extractCommandsFromText(dict.text);
+    if (commands) {
+      dict.commands = commands;
     }
 
     return dict;
