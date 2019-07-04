@@ -33,3 +33,10 @@ ncp('Monogatari/dist', 'dist/Monogatari', function (err) {
   } 
   console.log('Successfully copied engine to dist/Monogatari/');
 });
+
+ncp('src/Monogatari', 'dist/Monogatari/js', function (err) {
+  if (err) {
+    return console.error("Error copying Monogatari custom scripts", err);
+  } 
+  console.log('Successfully copied custom scripts to dist/Monogatari/js');
+});
