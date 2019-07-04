@@ -1,6 +1,21 @@
 <html>
 	<head>
 		<title>{{STORY_NAME}}</title>
+
+		<link rel="stylesheet" href="{{ENGINE_URL}}/engine/core/monogatari.css">
+		<link rel="stylesheet" href="{{ENGINE_URL}}/style/main.css">
+
+		<!-- Third Party JavaScript Libraries -->
+		<script src="{{ENGINE_URL}}/js/vendor/jquery.min.js"></script>
+
+		<!-- Monogatari JavaScript Libraries -->
+		<script src="{{ENGINE_URL}}/engine/debug/debug.js"></script>
+		<script src="{{ENGINE_URL}}/engine/core/monogatari.js"></script>
+		<script src="{{ENGINE_URL}}/js/options.js"></script>
+		<script src="{{ENGINE_URL}}/js/storage.js"></script>
+		<script src="{{ENGINE_URL}}/js/script.js"></script>
+		<script src="{{ENGINE_URL}}/js/main.js"></script>
+		
 		<script type="text/javascript">
 /**
  * Twison - Twine 2 JSON Export Story Format
@@ -27,12 +42,40 @@
 		</script>
 	</head>
 	<body>
-		<pre id="output">
+		<noscript>
+			<div class="middle text--center">
+				<h2>JavaScript Disabled or not Supported.</h2>
+				<small>To play this game, please enable JavaScript executing or use a different browser.</small>
+			</div>
+		</noscript>
+		
+		<pre id="output" style="display: none;">
 		
 		</pre>
+		
 		<div id="storyData" style="display: none;">
 			{{STORY_DATA}}
 		</div>
+		
+		<div id="monogatari">
+			<visual-novel>
+				<loading-screen></loading-screen>
+				<main-screen>
+					<main-menu></main-menu>
+				</main-screen>
+				<game-screen>
+					<dialog-log></dialog-log>
+					<text-box></text-box>
+					<quick-menu></quick-menu>
+				</game-screen>
+				<gallery-screen></gallery-screen>
+				<load-screen></load-screen>
+				<save-screen></save-screen>
+				<settings-screen></settings-screen>
+				<help-screen></help-screen>
+			</visual-novel>
+		</div>
+		
 		<script>
 			Twison.convert()
 		</script>

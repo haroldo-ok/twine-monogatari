@@ -6,7 +6,8 @@ var package = JSON.parse(fs.readFileSync("package.json", "utf-8"))
 var html = fs.readFileSync("src/storyFormat.html", "utf-8")
 var js = Uglify.minify("src/twison.js")
 
-html = html.replace("{{SCRIPT}}", js.code)
+html = html.replace("{{SCRIPT}}", js.code);
+html = html.replace(/\{\{ENGINE_URL\}\}/g, 'http://localhost:3000/Monogatari/');
 
 var outputJSON = {
   name: package.name,
