@@ -69,9 +69,7 @@ monogatari.characters ({
 	}
 });
 
-monogatari.script ({
-	// The game starts here.
-	'Start': [
-		twineStory.passages[0].text
-	]
-});
+monogatari.script(twineStory.passages.reduce(function(script, passage) {
+	script[passage.name] = passage.commands;	
+	return script;
+}, {}));
