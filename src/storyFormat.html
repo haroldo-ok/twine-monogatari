@@ -11,10 +11,6 @@
 		<!-- Monogatari JavaScript Libraries -->
 		<script src="{{ENGINE_URL}}/engine/debug/debug.js"></script>
 		<script src="{{ENGINE_URL}}/engine/core/monogatari.js"></script>
-		<script src="{{ENGINE_URL}}/js/options.js"></script>
-		<script src="{{ENGINE_URL}}/js/storage.js"></script>
-		<script src="{{ENGINE_URL}}/js/script.js"></script>
-		<script src="{{ENGINE_URL}}/js/main.js"></script>
 		
 		<script type="text/javascript">
 /**
@@ -77,7 +73,11 @@
 		</div>
 		
 		<script>
-			Twison.convert()
+			window.twineStory = Twison.convert();
 		</script>
+		<script src="{{ENGINE_URL}}/js/options.js"></script>
+		<script src="{{ENGINE_URL}}/js/storage.js"></script>
+		<script src="{{ENGINE_URL}}/js/script-twine.js"></script>
+		<script src="{{ENGINE_URL}}/js/main.js"></script>
 	</body>
 </html>
