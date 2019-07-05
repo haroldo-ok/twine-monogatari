@@ -70,6 +70,17 @@ monogatari.characters ({
 });
 
 monogatari.script(twineStory.passages.reduce(function(script, passage) {
-	script[passage.name] = passage.commands;	
+	var commands = passage.commands.slice();
+	var links = passage.links && [{
+		Choice: passage.links.reduce(function(choices, link) {
+			choices[link.name] = {
+				Text: link.name,
+				Do: 'jump ' + link.link
+			}
+			return choices;
+		}, {})
+	}] || [];
+	
+	script[passage.name] = commands.concat(links);
 	return script;
 }, {}));
