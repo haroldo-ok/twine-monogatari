@@ -30,7 +30,7 @@ var Twison = {
         return s.replace(/\[\[.*?\]\]/g, '').trimEnd();
       })
       .filter(function(s) {
-        return s && s !== '&lt;p&gt;';
+        return s && s !== '&lt;p&gt;' && !s.startsWith('//');
       });
     return lines;
   },
