@@ -26,13 +26,78 @@ var Twison = {
   
   extractCommandsFromText: function(text) {
     var lines = text.split(/[\r\n]+/g)
+      // Removes links and trailing spaces
       .map(function(s){ 
         return s.replace(/\[\[.*?\]\]/g, '').trimEnd();
       })
+      // Removes empty lines and comments
       .filter(function(s) {
-        return s && s !== '&lt;p&gt;';
+        return s && !s.startsWith('//');
       });
-    return lines;
+    
+    var commands = Twison.processScriptingBlocks(lines);    
+    return commands;
+  },
+  
+  processScriptingBlocks: function(lines) {
+    // Processes the "```" blocks
+    return lines.reduce(function(o, s) {
+      if (o.scriptType) {
+        
+        // We're within a code block
+        
+        if (s.startsWith("```")) {          
+          // It's the end of a code block
+          
+          // Generate the function
+          o.commands.push(Twison.processScriptingBlock(o.scriptType, o.scriptLines));
+          
+          // Exit code block
+          o.scriptType = '';
+          o.scriptLines.length = 0;
+        } else {
+          // A line within a code block
+          o.scriptLines.push(s);
+        }
+        
+      } else if (s.startsWith("```")) {        
+        // It's the start of a code block
+        
+        o.scriptType = s.slice(3).trimEnd() || 'js';
+        if (o.scriptType === 'js') {
+          o.scriptType = 'javascript';
+        }
+        
+      } else {        
+        // Plain text
+        o.commands.push(s);
+      }
+      return o;
+    }, {
+      commands: [],
+      scriptType: '',
+      scriptLines: []
+    })
+    .commands;
+  },
+  
+  processScriptingBlock: function(scriptType, lines) {
+    if (scriptType === 'javascript') {
+      try {
+        var compiledFunction = new Function('storage', lines.join('\n'));
+        return function monogataryCallWrapper() {
+          var storage = monogatari.storage();
+          var result = compiledFunction(storage);
+          monogatari.storage(storage);
+          return result;
+        }
+      } catch (e) {
+        console.error('Error while executing JS block. ', e);
+      }
+    } else {
+      // TODO: Proper error handling.
+      console.error('Unknown script type: ' + scriptType);
+    }
   },
 
   convertPassage: function(passage) {
