@@ -103,10 +103,16 @@ var Twison = {
       console.error('Unknown script type: ' + scriptType);
     }
   },
+  
+  htmlDecode: function(html) {
+    var doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.documentElement.textContent;    
+  },
     
   createJsFunction: function(source) {
       try {
-        var compiledFunction = new Function('storage', source);
+        var decodedSource = Twison.htmlDecode(source);
+        var compiledFunction = new Function('storage', decodedSource);
         return function monogataryCallWrapper() {
           var storage = monogatari.storage();
           var result = compiledFunction(storage);
