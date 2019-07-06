@@ -20,6 +20,20 @@ var Twison = {
             link: link
           }
         }
+      })
+      // Extracts conditionals from the link
+      .map(function(link) {
+        var m = /(^.*?)(\|\?.*)?$/.exec(link.name);
+        if (m[2]) {
+          // Found a conditional.
+          
+          var source = 'return ' + m[2].substring(2, m[2].length - 1);
+          console.log('Found conditional ', source);
+          
+          link.name = m[1].trimEnd();
+          link.condition = Twison.createJsFunction(source);
+        }
+        return link;
       });
     }
   },
@@ -83,8 +97,16 @@ var Twison = {
   
   processScriptingBlock: function(scriptType, lines) {
     if (scriptType === 'javascript') {
+      return Twison.createJsFunction(lines.join('\n'));
+    } else {
+      // TODO: Proper error handling.
+      console.error('Unknown script type: ' + scriptType);
+    }
+  },
+    
+  createJsFunction: function(source) {
       try {
-        var compiledFunction = new Function('storage', lines.join('\n'));
+        var compiledFunction = new Function('storage', source);
         return function monogataryCallWrapper() {
           var storage = monogatari.storage();
           var result = compiledFunction(storage);
@@ -92,14 +114,10 @@ var Twison = {
           return result;
         }
       } catch (e) {
-        console.error('Error while executing JS block. ', e);
+        console.error('Error while compiling JS block. ', e, {source: source});
       }
-    } else {
-      // TODO: Proper error handling.
-      console.error('Unknown script type: ' + scriptType);
-    }
-  },
-
+  },    
+    
   convertPassage: function(passage) {
   	var dict = {text: passage.innerHTML};
 
