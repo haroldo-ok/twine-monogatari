@@ -46,17 +46,21 @@ var Twison = {
         
         // We're within a code block
         
-        if (s.startsWith("```")) {
+        if (s.startsWith("```")) {          
           // It's the end of a code block
+          
+          // Generate the function
           o.commands.push(Twison.processScriptingBlock(o.scriptType, o.scriptLines));
+          
+          // Exit code block
+          o.scriptType = '';
           o.scriptLines.length = 0;
         } else {
           // A line within a code block
           o.scriptLines.push(s);
         }
         
-      } else if (s.startsWith("```")) {
-        
+      } else if (s.startsWith("```")) {        
         // It's the start of a code block
         
         o.scriptType = s.slice(3).trimEnd() || 'js';
@@ -88,7 +92,7 @@ var Twison = {
           return result;
         }
       } catch (e) {
-        console.error('Error while execute JS block. ', e);
+        console.error('Error while executing JS block. ', e);
       }
     } else {
       // TODO: Proper error handling.
