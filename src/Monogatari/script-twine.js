@@ -73,10 +73,16 @@ monogatari.script(twineStory.passages.reduce(function(script, passage) {
 	var commands = passage.commands.slice();
 	var links = passage.links && [{
 		Choice: passage.links.reduce(function(choices, link) {
-			choices[link.name] = {
+			var choice = {
 				Text: link.name,
 				Do: 'jump ' + link.link
+			};
+			
+			if (link.condition) {
+				choice.Condition = link.condition;
 			}
+			
+			choices[link.name] = choice;
 			return choices;
 		}, {})
 	}] || [];
