@@ -100,6 +100,8 @@ var Twison = {
   processScriptingBlock: function(scriptType, lines) {
     if (scriptType === 'javascript') {
       return Twison.createJsFunction(lines.join('\n'));
+    } else if (scriptType === 'yaml') {
+      return Twison.createObjectFromYAML(lines.join('\n'));
     } else {
       // TODO: Proper error handling.
       console.error('Unknown script type: ' + scriptType);
@@ -124,7 +126,15 @@ var Twison = {
       } catch (e) {
         console.error('Error while compiling JS block. ', e, {source: source});
       }
-  },    
+  },
+    
+  createObjectFromYAML: function(source) {
+      try {
+        return yaml.load(source);
+      } catch (e) {
+        console.error('Error while compiling JS block. ', e, {source: source});
+      }
+  },
     
   convertPassage: function(passage) {
   	var dict = {text: passage.innerHTML};
