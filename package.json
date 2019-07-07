@@ -27,6 +27,7 @@
     "watch": "^0.16.0"
   },
   "dependencies": {
+    "browserify": "^16.3.0",
     "js-yaml": "^3.13.1"
   }
 }
