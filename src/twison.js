@@ -1,5 +1,7 @@
 'use strict'
 
+var yaml = require('js-yaml');
+
 var Twison = {
   extractLinksFromText: function(text) {
     var links = text.match(/\[\[.+?\]\]/g)

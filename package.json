@@ -25,5 +25,8 @@
     "ncp": "^2.0.0",
     "uglify-js": "^2.6.1",
     "watch": "^0.16.0"
+  },
+  "dependencies": {
+    "js-yaml": "^3.13.1"
   }
 }
