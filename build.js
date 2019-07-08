@@ -1,6 +1,6 @@
 var fs = require('fs')
 var ncp = require('ncp');
-var Uglify = require('uglify-js')
+var Uglify = require('uglify-js');
 
 var package = JSON.parse(fs.readFileSync("package.json", "utf-8"))
 var html = fs.readFileSync("src/storyFormat.html", "utf-8")
