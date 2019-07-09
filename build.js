@@ -1,13 +1,10 @@
 var fs = require('fs')
 var ncp = require('ncp');
-var Uglify = require('uglify-js');
 
 var package = JSON.parse(fs.readFileSync("package.json", "utf-8"))
 var html = fs.readFileSync("src/storyFormat.html", "utf-8")
-var js = Uglify.minify("src/twison.js")
 
-html = html.replace("{{SCRIPT}}", js.code);
-html = html.replace(/\{\{ENGINE_URL\}\}/g, 'http://localhost:3000/Monogatari/');
+html = html.replace(/\{\{ENGINE_URL\}\}/g, 'http://localhost:3000/');
 
 var outputJSON = {
   name: package.name,
@@ -32,6 +29,13 @@ ncp('Monogatari/dist', 'dist/Monogatari', function (err) {
     return console.error("Error copying Monogatari engine", err);
   } 
   console.log('Successfully copied engine to dist/Monogatari/');
+});
+
+ncp('src/twison.js', 'dist/twison.js', function (err) {
+  if (err) {
+    return console.error("Error copying Monogatari custom scripts", err);
+  } 
+  console.log('Successfully copied twison.js');
 });
 
 ncp('src/Monogatari', 'dist/Monogatari/js', function (err) {
