@@ -38,7 +38,7 @@ ncp('src/twison.js', 'dist/twison.js', function (err) {
   console.log('Successfully copied twison.js');
 });
 
-ncp('src/Monogatari', 'dist/Monogatari/js', function (err) {
+ncp('src/Monogatari', 'dist/Monogatari', function (err) {
   if (err) {
     return console.error("Error copying Monogatari custom scripts", err);
   } 
