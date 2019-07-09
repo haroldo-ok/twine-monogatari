@@ -1,9 +1,4 @@
 /* global monogatari */
 
 // Persistent Storage Variable
-monogatari.storage ({
-	player: {
-		name: ''		
-	},
-	testCount: 0
-});
+monogatari.storage (twineStory.declarations.Storage || {});

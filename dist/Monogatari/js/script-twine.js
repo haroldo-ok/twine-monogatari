@@ -56,9 +56,7 @@ monogatari.assets ('images', {
 });
 
 // Define the backgrounds for each scene.
-monogatari.assets ('scenes', {
-
-});
+monogatari.assets ('scenes', twineStory.declarations.Scenes || {});
 
 
 // Define the Characters
