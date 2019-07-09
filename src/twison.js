@@ -53,6 +53,10 @@ var Twison = {
     return commands;
   },
   
+  extractConfigFromText: function(text) {
+    return jsyaml.load(Twison.htmlDecode(text));
+  },
+  
   processScriptingBlocks: function(lines) {
     // Processes the "```" blocks
     return lines.reduce(function(o, s) {
@@ -161,10 +165,20 @@ var Twison = {
       dict.tags = dict.tags.split(" ");
     }
 
-    var commands = Twison.extractCommandsFromText(dict.text);
-    if (commands) {
-      dict.commands = commands;
-    }
+
+    var specialPassage = /^\s*\[(\w+)\]\s*/.exec(dict.name);
+    if (specialPassage) {
+      var config = Twison.extractConfigFromText(dict.text);
+      if (config) {
+        dict.configKey = specialPassage[1];
+        dict.config = config;
+      }
+    } else {
+      var commands = Twison.extractCommandsFromText(dict.text);
+      if (commands) {
+        dict.commands = commands;
+      }
+    }    
 
     return dict;
 	},
@@ -174,7 +188,11 @@ var Twison = {
     var convertedPassages = Array.prototype.slice.call(passages).map(Twison.convertPassage);
 
     var dict = {
-      passages: convertedPassages
+      passages: convertedPassages.filter(p => p.commands),
+      declarations: convertedPassages.filter(p => p.config).reduce((o, p) => {
+        o[p.configKey] = p.config;
+        return o;
+      }, {})
     };
 
     ["name", "startnode", "creator", "creator-version", "ifid"].forEach(function(attr) {
