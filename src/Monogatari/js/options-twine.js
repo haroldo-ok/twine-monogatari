@@ -12,7 +12,7 @@
 
 const { Monogatari: monogatari } = Monogatari;
 
-monogatari.settings({
+monogatari.settings(_.merge({
 
 	// The name of your game, this will be used to store all the data so once
 	// you've released a game using one name, it shouldn't change. Please use the
@@ -93,7 +93,7 @@ monogatari.settings({
 	// the holder for the other asset specific directories, this directories are
 	// used when retrieving the files on the game.
 	'AssetsPath': {
-		'root': 'http://haroldo-ok.github.com/twine-monogatari/v0.1.0/Monogatari/assets',
+		'root': 'assets',
 		'characters': 'characters',
 		'icons': 'icons',
 		'images': 'images',
@@ -124,10 +124,10 @@ monogatari.settings({
 		'Store': 'GameData',
 		'Endpoint': ''
 	}
-});
+}, twineStory.declarations.Settings || {}));
 
 // Initial Settings
-monogatari.preferences ({
+monogatari.preferences (_.merge({
 
 	// Initial Language for Multilanguage Games or for the Default GUI Language.
 	'Language': 'English',
@@ -151,4 +151,4 @@ monogatari.preferences ({
 	// It is measured in seconds and starts counting after the text is
 	// completely displayed.
 	'AutoPlaySpeed': 5
-});
+}, twineStory.declarations.Preferences || {}));
