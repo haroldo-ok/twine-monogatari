@@ -60,12 +60,7 @@ monogatari.assets ('scenes', twineStory.declarations.Scenes || {});
 
 
 // Define the Characters
-monogatari.characters ({
-	'y': {
-		name: 'Yui',
-		color: '#5bcaff'
-	}
-});
+monogatari.characters (twineStory.declarations.Characters || {});
 
 monogatari.script(twineStory.passages.reduce(function(script, passage) {
 	var commands = passage.commands.slice();
