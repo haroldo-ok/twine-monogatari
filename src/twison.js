@@ -88,7 +88,7 @@ var Twison = {
         
       } else {        
         // Plain text
-        o.commands.push(s);
+        o.commands.push(Twison.htmlDecode(s));
       }
       return o;
     }, {
