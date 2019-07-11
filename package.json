@@ -1,21 +1,21 @@
 {
-  "name": "Twison",
-  "version": "0.0.1",
-  "description": "Export your Twine 2 story as a JSON document",
+  "name": "twine-monogatari",
+  "version": "0.1.0",
+  "description": "Allows one to use Twine to create Visual Novels for the Monogatari engine.",
   "main": "format.js",
   "scripts": {
     "test": "cd test && mocha test.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/lazerwalker/twison"
+    "url": "https://github.com/haroldo-ok/twine-monogatari"
   },
-  "author": "Mike Lazer-Walker",
+  "author": "Haroldo O. Pinheiro",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lazerwalker/twison/issues"
+    "url": "https://github.com/haroldo-ok/twine-monogatari/issues"
   },
-  "homepage": "https://github.com/lazerwalker/twison",
+  "homepage": "https://github.com/haroldo-ok/twine-monogatari",
   "devDependencies": {
     "chai": "^3.4.1",
     "express": "^4.13.3",
