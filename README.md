@@ -1,38 +1,55 @@
-# twine-monogatari
-Allows one to use Twine to create Visual Novels for the Monogatari engine.
+<h1 align="center">Welcome to twine-monogatari 👋</h1>
+<p>
+  <img src="https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000" />
+  <a href="https://github.com/haroldo-ok/twine-monogatari#readme">
+    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" target="_blank" />
+  </a>
+  <a href="https://github.com/haroldo-ok/twine-monogatari/graphs/commit-activity">
+    <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" target="_blank" />
+  </a>
+  <a href="https://github.com/haroldo-ok/twine-monogatari/blob/master/LICENSE">
+    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" target="_blank" />
+  </a>
+  <a href="https://twitter.com/Haroldo0k">
+    <img alt="Twitter: Haroldo0k" src="https://img.shields.io/twitter/follow/Haroldo0k.svg?style=social" target="_blank" />
+  </a>
+</p>
 
-**Work in progress.**
+> Allows one to use Twine to create Visual Novels for the Monogatari engine.
 
-<!--
-[![Build Status](https://travis-ci.org/lazerwalker/twison.svg?branch=master)](https://travis-ci.org/lazerwalker/twison)
--->
+### 🏠 [Homepage](https://github.com/haroldo-ok/twine-monogatari)
 
-Based on [Twison](https://github.com/lazerwalker/twison).
+## Install
 
-Twison is a story format for [Twine 2](http://twinery.org/2) that simply exports to JSON.
+```sh
+npm install
+```
 
-It is inspired by [Entweedle](http://www.maximumverbosity.net/twine/Entweedle/) as a model for how Twine 2 story formats work.
+## Run tests
 
+```sh
+npm run test
+```
 
-## Development
+## Author
 
-If you want to hack on this tool itself:
+👤 **Haroldo O. Pinheiro**
 
-1. Clone this repo and run `npm install` to install dependencies.
-2. Make your changes to the unminified code in the `src` folder
-3. Run `node build.js` to compile your source into a `format.js` file that Twine 2 can understand. Alternatively, you can run `node watch.js` to watch the `src` directory for changes and auto-recompile every time you save.
+* Twitter: [@Haroldo0k](https://twitter.com/Haroldo0k)
+* Github: [@haroldo-ok](https://github.com/haroldo-ok)
 
+## 🤝 Contributing
 
-### Testing your changes locally
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/haroldo-ok/twine-monogatari/issues).
 
-Running `npm start` will start the `watch.js` auto-compile behavior, and also start a local web server that serves the compiled `format.js` file. By default, this will be available at `http://localhost:3000/format.js`. Add that URL as a story format to your copy of Twine 2; every time you save a source file and then re-generate the "Play" view of your story in Twine, it should use the latest version of your code.
+## Show your support
 
-This is easier to do with the browser-based version of Twine 2 than with the downloadable copy, as you can just refresh your output page and it'll use the latest version of Twison.
+Give a ⭐️ if this project helped you!
 
+## 📝 License
 
-All contributions are welcome! If making code changes, please be sure to run the test suite (`npm test`) before opening a pull request.
+Copyright © 2019 [Haroldo O. Pinheiro](https://github.com/haroldo-ok).<br />
+This project is [MIT](https://github.com/haroldo-ok/twine-monogatari/blob/master/LICENSE) licensed.
 
-
-## License
-
-twine-monogatari is licensed under the MIT license. See the LICENSE file for more information.
+***
+_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
