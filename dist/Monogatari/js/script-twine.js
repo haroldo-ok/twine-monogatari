@@ -22,50 +22,31 @@ monogatari.action ('Notification').notifications ({
 });
 
 // Define the Particles JS Configurations used in the game
-monogatari.action ('Particles').particles ({
+monogatari.action ('Particles').particles (twineStory.declarations.Particles || {});
 
-});
-
-monogatari.assets ('gallery', {
-
-});
+monogatari.assets ('gallery', twineStory.declarations.Gallery || {});
 
 // Define the music used in the game.
-monogatari.assets ('music', {
-
-});
+monogatari.assets ('music', twineStory.declarations.Music || {});
 
 // Define the voice files used in the game.
-monogatari.assets ('voice', {
-
-});
+monogatari.assets ('voice', twineStory.declarations.Voice || {});
 
 // Define the sounds used in the game.
-monogatari.assets ('sound', {
-
-});
+monogatari.assets ('sound', twineStory.declarations.Sound || {});
 
 // Define the videos used in the game.
-monogatari.assets ('video', {
-
-});
+monogatari.assets ('video', twineStory.declarations.Video || {});
 
 // Define the images used in the game.
-monogatari.assets ('images', {
-
-});
+monogatari.assets ('images', twineStory.declarations.Images || {});
 
 // Define the backgrounds for each scene.
 monogatari.assets ('scenes', twineStory.declarations.Scenes || {});
 
 
 // Define the Characters
-monogatari.characters ({
-	'y': {
-		name: 'Yui',
-		color: '#5bcaff'
-	}
-});
+monogatari.characters (twineStory.declarations.Characters || {});
 
 monogatari.script(twineStory.passages.reduce(function(script, passage) {
 	var commands = passage.commands.slice();
