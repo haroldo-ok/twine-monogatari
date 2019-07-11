@@ -25,7 +25,8 @@ Based on [Twison](https://github.com/lazerwalker/twison).
 2. On the left hand side, click on "Formats";
 3. Click on "Add new format";
 4. Inform the URL: http://www.haroldo-ok.com/twine-monogatari/v0.1.0/format.js
-5. Click on "Add".
+5. Click on "Add";
+6. Select "twine-monogatari 0.1.0".
 
 ## Development
 
