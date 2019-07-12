@@ -19,6 +19,10 @@ This Twine 2 story format allows one to use [Twine](https://twinery.org/) to cre
 
 Based on [Twison](https://github.com/lazerwalker/twison).
 
+## Demo
+
+There's a demo available at: http://www.haroldo-ok.com/twine-monogatari/v0.1.0/demo.html
+
 ## Install
 
 1. Open the Twine 2 online editor: https://twinery.org/2/
