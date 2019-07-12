@@ -95,6 +95,7 @@ s:
     Doubt: green_surprised.png
     Happy: green_giggle.png
 </tw-passagedata><tw-passagedata pid="6" name="TestMenu" tags="" position="632,289.5" size="100,100">[[Increment counter -&gt;IncrementCounter]]
+[[Decrement counter |? storage.testCounter &gt; 0  -&gt;DecrementCounter]]
 [[Go to beach -&gt;GoBeach]]
 [[Restart -&gt;Start]]</tw-passagedata><tw-passagedata pid="7" name="IncrementCounter" tags="" position="324,355.5" size="100,100">&#96;&#96;&#96;js
 
@@ -114,7 +115,15 @@ show character e Happy center fadeIn
 
 e Here we are, isn&#39;t the sea beautiful?
 
-jump TestMenu</tw-passagedata><tw-passagedata pid="10" name="[Music]" tags="" position="87,505.5" size="100,100">Theme: illurock.mp3</tw-passagedata></tw-storydata>
+jump TestMenu</tw-passagedata><tw-passagedata pid="10" name="[Music]" tags="" position="87,505.5" size="100,100">Theme: illurock.mp3</tw-passagedata><tw-passagedata pid="11" name="DecrementCounter" tags="" position="950,337.5" size="100,100">&#96;&#96;&#96;js
+
+	storage.testCounter--;
+
+&#96;&#96;&#96;
+
+The counter is now {{testCounter}}.
+
+jump TestMenu</tw-passagedata></tw-storydata>
 		</div>
 		
 		<div id="monogatari">
