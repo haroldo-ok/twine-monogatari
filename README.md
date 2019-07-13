@@ -36,6 +36,7 @@ Alternately, you could import the demo (http://www.haroldo-ok.com/twine-monogata
 
 ## Basic usage
 
+* It is recommended to read the [Monogatari documentation](https://developers.monogatari.io/documentation/script/audio), specially the "Script" section, in order to have a better idea of the available commands;
 * The initial passage *must* be called `Start`;
 * Passage names must contain *no spaces*;
 * In order to define various  Monogatari declarations, you can use special passages like `[Scenes]`, `[Characters]`, `[Images]`, `[Sound]`, `[Music]`, and so on; those declarations can be made in either JSON or YAML formats; example:
