@@ -32,6 +32,88 @@ There's a demo available at: http://www.haroldo-ok.com/twine-monogatari/v0.1.0/d
 5. Click on "Add";
 6. Select "twine-monogatari 0.1.0".
 
+Alternately, you could import the demo (http://www.haroldo-ok.com/twine-monogatari/v0.1.0/demo.html) on the editor.
+
+## Basic usage
+
+* The initial passage *must* be called `Start`;
+* Passage names must contain *no spaces*;
+* In order to define various  Monogatari declarations, you can use special passages like `[Scenes]`, `[Characters]`, `[Images]`, `[Sound]`, `[Music]`, and so on; those declarations can be made in either JSON or YAML formats; example:
+```yaml
+e:
+  Name: "{{evelyn_name}}"
+  Color: "#00bfff"
+  Directory: Evelyn
+  Images:
+    Normal: normal.png
+    Mad: hmph!.png
+    Doubt: uhh.png
+    Disapointed: ngggg....png
+    Happy: hehehehe.png
+```
+* Also, in order to set various Monogatari settings, you can use a special passage named `[Settings]`, also in either JSON or YAML formats;
+	* The most important setting you must define is `AssetsPath.root`, that points to the base URL from the site the assets will be pulled from, like for example:
+	
+```yaml
+AssetsPath:
+  root: http://www.haroldo-ok.com/twine-monogatari/v0.1.0/Monogatari/assets
+```
+
+* Twine links are turned into Monogatari choices, and can contain conditions:
+
+```javascript
+[[One choice->SomeTarget]]
+[[Another choice->AnotherTarget]]
+[[Optional choice |? storage.testCount > 2 ->SomewhereElse]]
+```
+
+* Arbitrary JavaScript code can be included as Markdown code blocks, like so:
+
+```markdown
+	```js
+
+	storage.player.name = 'Bob';
+	storage.testCount++;
+
+	```
+
+	Hello, again, {{player.name}}.
+
+	You've come here {{testCount}} times.
+
+	jump SomewhereElse
+```
+
+* Here's a more complete example:
+
+```markdown
+	```js
+
+		storage.player.name = 'Bob';
+		storage.howManyTimes++;
+
+	```
+	
+	You've been here {{howManyTimes}} times.
+
+	play music Theme
+	show scene Classroom fadeIn
+	e Hello, {{player.name}}!
+
+	```js
+
+		storage.evelyn_name = 'Evelyn';
+
+	```
+
+	show character e Normal center fadeIn
+	e I'm {{evelyn_name}}.
+
+	[[Test menu ->TestMenu]]
+	[[Continue ->Continue]]
+	[[Secret |? storage.secretsFound > 4 ->Secret]]
+```
+
 ## Development
 
 ```sh
