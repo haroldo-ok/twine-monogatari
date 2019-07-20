@@ -1,28 +1,10 @@
-'use strict'
+'use strict';
 
-var Twison = {
-  extractLinksFromText: function(text) {
-    var links = text.match(/\[\[.+?\]\]/g)
-    if (links) {
-      return links.map(function(link) {
-        var differentName = link.match(/\[\[(.*?)\-\&gt;(.*?)\]\]/);
-        if (differentName) {
-          // [[name->link]]
-          return {
-            name: differentName[1],
-            link: differentName[2]
-          };
-        } else {
-          // [[link]]
-          link = link.substring(2, link.length-2)
-          return {
-            name: link,
-            link: link
-          }
-        }
-      })
-      // Extracts conditionals from the link
-      .map(function(link) {
+(function(){
+
+var Parser = {
+  extractConditionalFromLinks: function(links) {
+      return links && links.map(function(link) {
         var m = /(^.*?)(\|\?.*)?$/.exec(link.name);
         if (m[2]) {
           // Found a conditional.
@@ -31,11 +13,10 @@ var Twison = {
           console.log('Found conditional ', source);
           
           link.name = m[1].trimEnd();
-          link.condition = Twison.createJsFunction(source);
+          link.condition = Parser.createJsFunction(source);
         }
         return link;
       });
-    }
   },
   
   extractCommandsFromText: function(text) {
@@ -49,12 +30,12 @@ var Twison = {
         return s && !s.startsWith('//');
       });
     
-    var commands = Twison.processScriptingBlocks(lines);    
+    var commands = Parser.processScriptingBlocks(lines);    
     return commands;
   },
   
   extractConfigFromText: function(text) {
-    return jsyaml.load(Twison.htmlDecode(text));
+    return jsyaml.load(Parser.htmlDecode(text));
   },
   
   processScriptingBlocks: function(lines) {
@@ -68,7 +49,7 @@ var Twison = {
           // It's the end of a code block
           
           // Generate the function
-          o.commands.push(Twison.processScriptingBlock(o.scriptType, o.scriptLines));
+          o.commands.push(Parser.processScriptingBlock(o.scriptType, o.scriptLines));
           
           // Exit code block
           o.scriptType = '';
@@ -88,7 +69,7 @@ var Twison = {
         
       } else {        
         // Plain text
-        o.commands.push(Twison.htmlDecode(s));
+        o.commands.push(Parser.htmlDecode(s));
       }
       return o;
     }, {
@@ -101,9 +82,9 @@ var Twison = {
   
   processScriptingBlock: function(scriptType, lines) {
     if (scriptType === 'javascript') {
-      return Twison.createJsFunction(lines.join('\n'));
+      return Parser.createJsFunction(lines.join('\n'));
     } else if (scriptType === 'yaml') {
-      return Twison.createObjectFromYAML(lines.join('\n'));
+      return Parser.createObjectFromYAML(lines.join('\n'));
     } else {
       // TODO: Proper error handling.
       console.error('Unknown script type: ' + scriptType);
@@ -117,7 +98,7 @@ var Twison = {
     
   createJsFunction: function(source) {
       try {
-        var decodedSource = Twison.htmlDecode(source);
+        var decodedSource = Parser.htmlDecode(source);
         var compiledFunction = new Function('storage', decodedSource);
         return function monogataryCallWrapper() {
           var storage = monogatari.storage();
@@ -139,53 +120,32 @@ var Twison = {
   },
     
   convertPassage: function(passage) {
-  	var dict = {text: passage.innerHTML};
+    var dict = passage;
 
-    var links = Twison.extractLinksFromText(dict.text);
+    var links = Parser.extractConditionalFromLinks(dict.links);
     if (links) {
       dict.links = links;
     }
 
-    ["name", "pid", "position", "tags"].forEach(function(attr) {
-      var value = passage.attributes[attr].value;
-      if (value) {
-        dict[attr] = value;
-      }
-    });
-
-    if(dict.position) {
-      var position = dict.position.split(',')
-      dict.position = {
-        x: position[0],
-        y: position[1]
-      }
-    }
-
-    if (dict.tags) {
-      dict.tags = dict.tags.split(" ");
-    }
-
-
     var specialPassage = /^\s*\[(\w+)\]\s*/.exec(dict.name);
     if (specialPassage) {
-      var config = Twison.extractConfigFromText(dict.text);
+      var config = Parser.extractConfigFromText(dict.text);
       if (config) {
         dict.configKey = specialPassage[1];
         dict.config = config;
       }
     } else {
-      var commands = Twison.extractCommandsFromText(dict.text);
+      var commands = Parser.extractCommandsFromText(dict.text);
       if (commands) {
         dict.commands = commands;
       }
     }    
 
     return dict;
-	},
+  },
 
   convertStory: function(story) {
-    var passages = story.getElementsByTagName("tw-passagedata");
-    var convertedPassages = Array.prototype.slice.call(passages).map(Twison.convertPassage);
+    var convertedPassages = story.passages.map(Parser.convertPassage);
 
     var dict = {
       passages: convertedPassages.filter(p => p.commands),
@@ -195,38 +155,21 @@ var Twison = {
       }, {})
     };
 
-    ["name", "startnode", "creator", "creator-version", "ifid"].forEach(function(attr) {
-      var value = story.attributes[attr].value;
-      if (value) {
-        dict[attr] = value;
-      }
-    });
-
-    // Add PIDs to links
-    var pidsByName = {};
-    dict.passages.forEach(function(passage) {
-      pidsByName[passage.name] = passage.pid;
-    });
-
-    dict.passages.forEach(function(passage) {
-      if (!passage.links) return;
-      passage.links.forEach(function(link) {
-        link.pid = pidsByName[link.link];
-        if (!link.pid) {
-          link.broken = true;
-        }
-      });
-    });
-
     return dict;
   },
 
-  convert: function() {
-    var storyData = document.getElementsByTagName("tw-storydata")[0];
-    var convertedStory = Twison.convertStory(storyData);
-    console.log('Parsed story', convertedStory);
-    return convertedStory;
+  convert: function(storyData) {
+    return Parser.convertStory(storyData);
   }
 }
 
-window.Twison = Twison;
+window.TwineMonogatari = {
+  Parser: Parser,
+  
+  convert: function() {
+    var twisonStory = Twison.convert();
+    return TwineMonogatari.Parser.convert(twisonStory);
+  }
+};
+
+})();
