@@ -24,8 +24,11 @@
 		<script src="{{ENGINE_URL}}/Monogatari/engine/debug/debug.js"></script>
 		<script src="{{ENGINE_URL}}/Monogatari/engine/core/monogatari.js"></script>
 		
-		<!-- Customized twison -->
+		<!-- Twison -->
 		<script src="{{ENGINE_URL}}/twison.js"></script>
+		
+		<!-- Twine-Monogatari -->
+		<script src="{{ENGINE_URL}}/twine-monogatari.js"></script>
 		
 	</head>
 	<body>
@@ -64,7 +67,8 @@
 		</div>
 		
 		<script>
-			window.twineStory = Twison.convert();
+			window.twineStory = TwineMonogatari.Parser.convert(Twison.convert());
+			console.log('Parsed story', window.twineStory);
 		</script>
 		<script src="{{ENGINE_URL}}/Monogatari/js/options-twine.js"></script>
 		<script src="{{ENGINE_URL}}/Monogatari/js/storage-twine.js"></script>
