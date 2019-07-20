@@ -1,10 +1,10 @@
-'use strict'
+'use strict';
 
 (function(){
 
 var Parser = {
   extractConditionalFromLinks: function(links) {
-      return links && links..map(function(link) {
+      return links && links.map(function(link) {
         var m = /(^.*?)(\|\?.*)?$/.exec(link.name);
         if (m[2]) {
           // Found a conditional.
@@ -145,7 +145,7 @@ var Parser = {
   },
 
   convertStory: function(story) {
-    var convertedPassages = Array.prototype.slice.call(story.passages).map(Parser.convertPassage);
+    var convertedPassages = story.passages.map(Parser.convertPassage);
 
     var dict = {
       passages: convertedPassages.filter(p => p.commands),
@@ -159,13 +159,17 @@ var Parser = {
   },
 
   convert: function(storyData) {
-    var storyData = document.getElementsByTagName("tw-storydata")[0];
     return Parser.convertStory(storyData);
   }
 }
 
 window.TwineMonogatari = {
-  Parser: Parser
+  Parser: Parser,
+  
+  convert: function() {
+    var twisonStory = Twison.convert();
+    return TwineMonogatari.Parser.convert(twisonStory);
+  }
 };
 
 })();

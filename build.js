@@ -33,9 +33,16 @@ ncp('Monogatari/dist', 'dist/Monogatari', function (err) {
 
 ncp('src/twison.js', 'dist/twison.js', function (err) {
   if (err) {
-    return console.error("Error copying Monogatari custom scripts", err);
+    return console.error("Error copying twison.js", err);
   } 
   console.log('Successfully copied twison.js');
+});
+
+ncp('src/twine-monogatari.js', 'dist/twine-monogatari.js', function (err) {
+  if (err) {
+    return console.error("Error copying twine-monogatari.js", err);
+  } 
+  console.log('Successfully copied twine-monogatari.js');
 });
 
 ncp('src/Monogatari', 'dist/Monogatari', function (err) {
