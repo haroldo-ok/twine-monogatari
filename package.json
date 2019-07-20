@@ -1,6 +1,6 @@
 {
   "name": "twine-monogatari",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Allows one to use Twine to create Visual Novels for the Monogatari engine.",
   "main": "format.js",
   "scripts": {

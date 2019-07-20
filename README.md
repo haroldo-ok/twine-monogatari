@@ -119,8 +119,17 @@ AssetsPath:
 
 ## Development
 
+### Installing
+
 ```sh
+git submodule init
+git submodule update
 npm install
+```
+
+### Running
+
+```sh
 node build.js
 ```
 
@@ -132,6 +141,16 @@ If you want to hack on this tool itself:
 
 
 ## Run locally
+
+### Installing
+
+```sh
+git submodule init
+git submodule update
+npm install
+```
+
+### Running
 
 ```sh
 npm start
