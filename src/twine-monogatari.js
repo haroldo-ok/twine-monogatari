@@ -20,14 +20,22 @@ var Parser = {
   },
   
   extractCommandsFromText: function(text) {
-    var lines = text.split(/[\r\n]+/g)
+    var lines = text.split(/\r?\n/g)
       // Removes links and trailing spaces
       .map(function(s){ 
         return s.replace(/\[\[.*?\]\]/g, '').trimEnd();
       })
+      // Turns into objects and adds line numbers
+      .map(function(s, i){ 
+        return {
+          type: 'text',
+          line: i + 1,
+          source: Parser.htmlDecode(s)
+        };
+      })      
       // Removes empty lines and comments
-      .filter(function(s) {
-        return s && !s.startsWith('//');
+      .filter(function(o) {
+        return o.source && !o.source.startsWith('//');
       });
     
     var commands = Parser.processScriptingBlocks(lines);    
@@ -40,7 +48,9 @@ var Parser = {
   
   processScriptingBlocks: function(lines) {
     // Processes the "```" blocks
-    return lines.reduce(function(o, s) {
+    return lines.reduce(function(o, lin) {
+      var s = lin.source;
+      
       if (o.scriptType) {
         
         // We're within a code block
@@ -49,7 +59,13 @@ var Parser = {
           // It's the end of a code block
           
           // Generate the function
-          o.commands.push(Parser.processScriptingBlock(o.scriptType, o.scriptLines));
+          o.commands.push({
+            type: 'code',
+            line: o.line,            
+            scriptType: o.scriptType,
+            source: o.scriptLines.join('\n'),
+            content: Parser.processScriptingBlock(o.scriptType, o.scriptLines)
+          });
           
           // Exit code block
           o.scriptType = '';
@@ -67,13 +83,15 @@ var Parser = {
           o.scriptType = 'javascript';
         }
         
+        o.line = lin.line;
       } else {        
         // Plain text
-        o.commands.push(Parser.htmlDecode(s));
+        o.commands.push(lin);
       }
       return o;
     }, {
       commands: [],
+      line: 0,
       scriptType: '',
       scriptLines: []
     })
