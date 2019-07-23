@@ -159,10 +159,22 @@ var Parser = {
 
     var specialPassage = /^\s*\[(\w+)\]\s*/.exec(dict.name);
     if (specialPassage) {
-      var config = Parser.extractConfigFromText(dict.text);
-      if (config) {
+      try {
         dict.configKey = specialPassage[1];
-        dict.config = config;
+        var config = Parser.extractConfigFromText(dict.text);
+        if (config) {
+          dict.config = config;
+        }
+      } catch (e) {
+        var data = {e: e};
+        
+        if (e.mark) {
+          data.line = e.mark.line + 1;
+        }
+        
+        dict.config = {};
+        ErrorHandler.simpleError(dict.config, 
+          'Error parsing config: ' + e, data);        
       }
     } else {
       var commands = Parser.extractCommandsFromText(dict.text);
