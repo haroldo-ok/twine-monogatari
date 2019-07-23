@@ -1,10 +1,24 @@
 'use strict';
 
 (function(){
-
+  
+var ErrorHandler = {
+   simpleError: (o, message, data) => {
+     if (!o.errors) {
+       o.errors = [];
+     };
+     
+     o.errors.push(_.extend({
+       message: message
+     }, data || {}));
+   }
+};
+  
 var Parser = {
   extractConditionalFromLinks: function(links) {
       return links && links.map(function(link) {
+        link.name = Parser.htmlDecode(link.name);
+        
         var m = /(^.*?)(\|\?.*)?$/.exec(link.name);
         if (m[2]) {
           // Found a conditional.
@@ -59,13 +73,21 @@ var Parser = {
           // It's the end of a code block
           
           // Generate the function
-          o.commands.push({
+          var block = {
             type: 'code',
             line: o.line,            
             scriptType: o.scriptType,
-            source: o.scriptLines.join('\n'),
-            content: Parser.processScriptingBlock(o.scriptType, o.scriptLines)
-          });
+            source: o.scriptLines.join('\n')
+          };
+          
+          try {
+            block.content = Parser.processScriptingBlock(o.scriptType, o.scriptLines);
+          } catch (e) {
+            ErrorHandler.simpleError(block, 
+              'Error parsing ' + o.scriptType + ' code block: ' + e, {e: e});
+          }
+          
+          o.commands.push(block);
           
           // Exit code block
           o.scriptType = '';
@@ -104,8 +126,7 @@ var Parser = {
     } else if (scriptType === 'yaml') {
       return Parser.createObjectFromYAML(lines.join('\n'));
     } else {
-      // TODO: Proper error handling.
-      console.error('Unknown script type: ' + scriptType);
+      throw new Error('Unknown script type: ' + scriptType);
     }
   },
   
@@ -115,26 +136,17 @@ var Parser = {
   },
     
   createJsFunction: function(source) {
-      try {
-        var decodedSource = Parser.htmlDecode(source);
-        var compiledFunction = new Function('storage', decodedSource);
-        return function monogataryCallWrapper() {
-          var storage = monogatari.storage();
-          var result = compiledFunction(storage);
-          monogatari.storage(storage);
-          return result;
-        }
-      } catch (e) {
-        console.error('Error while compiling JS block. ', e, {source: source});
+      var compiledFunction = new Function('storage', source);
+      return function monogataryCallWrapper() {
+        var storage = monogatari.storage();
+        var result = compiledFunction(storage);
+        monogatari.storage(storage);
+        return result;
       }
   },
     
   createObjectFromYAML: function(source) {
-      try {
-        return jsyaml.load(source);
-      } catch (e) {
-        console.error('Error while compiling JS block. ', e, {source: source});
-      }
+       return jsyaml.load(source);
   },
     
   convertPassage: function(passage) {
