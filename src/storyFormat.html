@@ -11,8 +11,11 @@
 
 		  gtag('config', 'UA-130174335-2');
 		</script>
+		
+		<meta charset="UTF-8">
 
 		<link rel="stylesheet" href="{{ENGINE_URL}}/Monogatari/engine/core/monogatari.css">
+		<link rel="stylesheet" href="{{ENGINE_URL}}/Monogatari/style/error.css">
 		<link rel="stylesheet" href="{{ENGINE_URL}}/Monogatari/style/main.css">
 
 		<!-- Third Party JavaScript Libraries -->
@@ -66,9 +69,17 @@
 			</visual-novel>
 		</div>
 		
+		<div id="tw-errors">
+			<div class="icon" title="The script has errors">&#x26A0;&#xFE0F;</div>
+			<ul class="errors"></ul>
+		</div>
+		
 		<script>
 			window.twineStory = TwineMonogatari.convert();
 			console.log('Parsed story', window.twineStory);
+			if (window.twineStory.errors) {
+				console.error('Story contains errors', window.twineStory.errors);
+			}
 		</script>
 		<script src="{{ENGINE_URL}}/Monogatari/js/options-twine.js"></script>
 		<script src="{{ENGINE_URL}}/Monogatari/js/storage-twine.js"></script>

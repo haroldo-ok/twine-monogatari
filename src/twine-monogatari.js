@@ -3,15 +3,37 @@
 (function(){
   
 var ErrorHandler = {
-   simpleError: (o, message, data) => {
-     if (!o.errors) {
-       o.errors = [];
-     };
+  
+  TEMPLATE: _.template(
+    '<li class="error">' +
+			'<ul class="summary">' +
+        '<li class="passage"><%=passage%></li>' +
+        '<li class="message"><%=message%></li>' +
+				'<li class="line">line <%=line%></li>' +
+			'</ul>' +
+		'</li>'),
+  
+  simpleError: (o, message, data) => {
+    if (!o.errors) {
+      o.errors = [];
+    };
      
-     o.errors.push(_.extend({
-       message: message
-     }, data || {}));
-   }
+    o.errors.push(_.extend({
+      message: message
+    }, data || {}));
+  },
+  
+  showError: error => {
+    var html = ErrorHandler.TEMPLATE(_.extend({
+      passage: '(Global)',
+      message: '???',
+      line: 0
+    }, error));
+    
+    $('#tw-errors').addClass('has-errors')
+      .find('.errors').append(html);
+  }
+  
 };
   
 var Parser = {
@@ -246,7 +268,9 @@ window.TwineMonogatari = {
   
   convert: function() {
     var twisonStory = Twison.convert();
-    return TwineMonogatari.Parser.convert(twisonStory);
+    var monogatariStory = TwineMonogatari.Parser.convert(twisonStory);
+    (monogatariStory.errors || []).forEach(ErrorHandler.showError);
+    return  monogatariStory;
   }
 };
 
