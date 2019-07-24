@@ -1,8 +1,12 @@
 #tw-errors {
-    display: block;
+    display: none;
     position: absolute;
     top: 1em;
     left: 1em;
+}
+
+#tw-errors.has-errors {
+    display: block;
 }
 
 #tw-errors > .icon {
