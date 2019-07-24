@@ -1,0 +1,64 @@
+#tw-errors {
+    display: block;
+    position: absolute;
+    top: 1em;
+    left: 1em;
+}
+
+#tw-errors > .icon {
+    font-size: 200%;
+    background: red;
+    width: 1.2em;
+    height: 1.2em;
+    border-radius: 1.2em;
+	opacity: 0.7;
+}
+
+#tw-errors > .errors {
+	display: none;
+    background: #888;
+	color: #F7F7F7;
+	font-size: 80%;
+	margin: 0;
+	padding: 0;
+	border-radius: 3px;
+	text-align: left;
+	overflow-y: auto;
+}
+
+#tw-errors:hover {
+	bottom: 1em;
+	width: 60%;
+}
+
+#tw-errors:hover > .icon {
+	display: none;
+}
+
+#tw-errors:hover > .errors {
+	display: block;
+}
+
+#tw-errors:hover .error {
+	width: 100%;
+}
+
+#tw-errors:hover .summary {
+	padding: 0;
+	width: 100%;
+	border-bottom: dashed 1px #F7F7F7;
+}
+
+#tw-errors:hover .passage {
+	padding-left: 0.5em;
+	color: #F88;
+}
+
+#tw-errors:hover .message {
+}
+
+#tw-errors:hover .line {
+	float: right;
+	padding-right: 0.5em;
+	color: #FF8;
+}
