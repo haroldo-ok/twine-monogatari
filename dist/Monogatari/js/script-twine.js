@@ -49,7 +49,10 @@ monogatari.assets ('scenes', twineStory.declarations.Scenes || {});
 monogatari.characters (twineStory.declarations.Characters || {});
 
 monogatari.script(twineStory.passages.reduce(function(script, passage) {
-	var commands = passage.commands.slice();
+	var commands = passage.commands.map(function(o) {
+		return o.content || o.source;
+	});
+	
 	var links = passage.links && [{
 		Choice: passage.links.reduce(function(choices, link) {
 			var choice = {
