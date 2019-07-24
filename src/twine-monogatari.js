@@ -171,7 +171,7 @@ var Parser = {
           dict.config = config;
         }
       } catch (e) {
-        var data = {e: e};
+        var data = {type: 'config', e: e};
         
         if (e.mark) {
           data.line = e.mark.line + 1;
@@ -195,7 +195,24 @@ var Parser = {
     // Collect all the errors together into a single array
     return _(passages).flatMap(passage => {
       return _([passage, passage.links, passage.commands, passage.config])
-        .flatten().compact().map('errors').flatten().compact()
+        .flatten().compact().map(o => {
+          // Has no errors: skip.
+          if (!o || !o.errors) {
+            return null;
+          }
+        
+          // If it has type or line information, merge the info
+          if (o.type || _.isNumber(o.line)) {
+            return o.errors.map(e => {
+              return _(o).pick(o, ['type', 'line', 'scriptType'])
+                .extend(e).value();
+            });
+          }
+        
+          // Has just the errors.
+          return o.errors;
+        })
+        .flatten().compact()
         .map(o => _.extend({passage: passage.name}, o)).value();
     }).compact().value();
   },
