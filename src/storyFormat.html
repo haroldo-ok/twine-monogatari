@@ -69,6 +69,9 @@
 		<script>
 			window.twineStory = TwineMonogatari.convert();
 			console.log('Parsed story', window.twineStory);
+			if (window.twineStory.errors) {
+				console.error('Story contains errors', window.twineStory.errors);
+			}
 		</script>
 		<script src="{{ENGINE_URL}}/Monogatari/js/options-twine.js"></script>
 		<script src="{{ENGINE_URL}}/Monogatari/js/storage-twine.js"></script>
