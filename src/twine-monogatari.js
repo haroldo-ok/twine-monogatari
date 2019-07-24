@@ -1,10 +1,24 @@
 'use strict';
 
 (function(){
-
+  
+var ErrorHandler = {
+   simpleError: (o, message, data) => {
+     if (!o.errors) {
+       o.errors = [];
+     };
+     
+     o.errors.push(_.extend({
+       message: message
+     }, data || {}));
+   }
+};
+  
 var Parser = {
   extractConditionalFromLinks: function(links) {
       return links && links.map(function(link) {
+        link.name = Parser.htmlDecode(link.name);
+        
         var m = /(^.*?)(\|\?.*)?$/.exec(link.name);
         if (m[2]) {
           // Found a conditional.
@@ -13,7 +27,12 @@ var Parser = {
           console.log('Found conditional ', source);
           
           link.name = m[1].trimEnd();
-          link.condition = Parser.createJsFunction(source);
+          try {
+            link.condition = Parser.createJsFunction(source);
+          } catch (e) {
+            ErrorHandler.simpleError(link, 
+              'Error parsing condition for link "' + link.name + '": ' + e, {link: link.name, e: e});
+          }
         }
         return link;
       });
@@ -59,13 +78,21 @@ var Parser = {
           // It's the end of a code block
           
           // Generate the function
-          o.commands.push({
+          var block = {
             type: 'code',
             line: o.line,            
             scriptType: o.scriptType,
-            source: o.scriptLines.join('\n'),
-            content: Parser.processScriptingBlock(o.scriptType, o.scriptLines)
-          });
+            source: o.scriptLines.join('\n')
+          };
+          
+          try {
+            block.content = Parser.processScriptingBlock(o.scriptType, o.scriptLines);
+          } catch (e) {
+            ErrorHandler.simpleError(block, 
+              'Error parsing ' + o.scriptType + ' code block: ' + e, {e: e});
+          }
+          
+          o.commands.push(block);
           
           // Exit code block
           o.scriptType = '';
@@ -104,8 +131,7 @@ var Parser = {
     } else if (scriptType === 'yaml') {
       return Parser.createObjectFromYAML(lines.join('\n'));
     } else {
-      // TODO: Proper error handling.
-      console.error('Unknown script type: ' + scriptType);
+      throw new Error('Unknown script type: ' + scriptType);
     }
   },
   
@@ -115,26 +141,17 @@ var Parser = {
   },
     
   createJsFunction: function(source) {
-      try {
-        var decodedSource = Parser.htmlDecode(source);
-        var compiledFunction = new Function('storage', decodedSource);
-        return function monogataryCallWrapper() {
-          var storage = monogatari.storage();
-          var result = compiledFunction(storage);
-          monogatari.storage(storage);
-          return result;
-        }
-      } catch (e) {
-        console.error('Error while compiling JS block. ', e, {source: source});
+      var compiledFunction = new Function('storage', source);
+      return function monogataryCallWrapper() {
+        var storage = monogatari.storage();
+        var result = compiledFunction(storage);
+        monogatari.storage(storage);
+        return result;
       }
   },
     
   createObjectFromYAML: function(source) {
-      try {
-        return jsyaml.load(source);
-      } catch (e) {
-        console.error('Error while compiling JS block. ', e, {source: source});
-      }
+       return jsyaml.load(source);
   },
     
   convertPassage: function(passage) {
@@ -147,10 +164,22 @@ var Parser = {
 
     var specialPassage = /^\s*\[(\w+)\]\s*/.exec(dict.name);
     if (specialPassage) {
-      var config = Parser.extractConfigFromText(dict.text);
-      if (config) {
+      try {
         dict.configKey = specialPassage[1];
-        dict.config = config;
+        var config = Parser.extractConfigFromText(dict.text);
+        if (config) {
+          dict.config = config;
+        }
+      } catch (e) {
+        var data = {type: 'config', e: e};
+        
+        if (e.mark) {
+          data.line = e.mark.line + 1;
+        }
+        
+        dict.config = {};
+        ErrorHandler.simpleError(dict.config, 
+          'Error parsing config: ' + e, data);        
       }
     } else {
       var commands = Parser.extractCommandsFromText(dict.text);
@@ -161,6 +190,32 @@ var Parser = {
 
     return dict;
   },
+  
+  convertErrors: function(passages) {
+    // Collect all the errors together into a single array
+    return _(passages).flatMap(passage => {
+      return _([passage, passage.links, passage.commands, passage.config])
+        .flatten().compact().map(o => {
+          // Has no errors: skip.
+          if (!o || !o.errors) {
+            return null;
+          }
+        
+          // If it has type or line information, merge the info
+          if (o.type || _.isNumber(o.line)) {
+            return o.errors.map(e => {
+              return _(o).pick(o, ['type', 'line', 'scriptType'])
+                .extend(e).value();
+            });
+          }
+        
+          // Has just the errors.
+          return o.errors;
+        })
+        .flatten().compact()
+        .map(o => _.extend({passage: passage.name}, o)).value();
+    }).compact().value();
+  },
 
   convertStory: function(story) {
     var convertedPassages = story.passages.map(Parser.convertPassage);
@@ -170,8 +225,13 @@ var Parser = {
       declarations: convertedPassages.filter(p => p.config).reduce((o, p) => {
         o[p.configKey] = p.config;
         return o;
-      }, {})
+      }, {})     
     };
+    
+    var errors = Parser.convertErrors(story.passages);
+    if (errors && errors.length) {
+      dict.errors = errors;
+    }
 
     return dict;
   },
