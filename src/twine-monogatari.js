@@ -195,7 +195,8 @@ var Parser = {
     // Collect all the errors together into a single array
     return _(passages).flatMap(passage => {
       return _([passage, passage.links, passage.commands, passage.config])
-        .flatten().compact().map('errors').flatten().compact().value();
+        .flatten().compact().map('errors').flatten().compact()
+        .map(o => _.extend({passage: passage.name}, o)).value();
     }).compact().value();
   },
 
