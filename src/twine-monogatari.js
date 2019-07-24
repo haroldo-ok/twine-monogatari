@@ -27,7 +27,12 @@ var Parser = {
           console.log('Found conditional ', source);
           
           link.name = m[1].trimEnd();
-          link.condition = Parser.createJsFunction(source);
+          try {
+            link.condition = Parser.createJsFunction(source);
+          } catch (e) {
+            ErrorHandler.simpleError(link, 
+              'Error parsing condition for link "' + link.name + '": ' + e, {link: link.name, e: e});
+          }
         }
         return link;
       });
