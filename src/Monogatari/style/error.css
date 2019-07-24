@@ -40,26 +40,34 @@
 	display: block;
 }
 
-#tw-errors:hover .error {
+#tw-errors .error {
 	width: 100%;
 }
 
-#tw-errors:hover .summary {
+#tw-errors .summary {
 	padding: 0;
 	width: 100%;
 	border-bottom: dashed 1px #F7F7F7;
+    display: table;
 }
 
-#tw-errors:hover .passage {
+#tw-errors .passage,
+#tw-errors .line {
 	padding-left: 0.5em;
+	padding-right: 0.5em;
+    display: table-cell;
+}
+
+#tw-errors .passage {
 	color: #F88;
 }
 
-#tw-errors:hover .message {
+#tw-errors .message {
+    display: table-cell;
 }
 
-#tw-errors:hover .line {
-	float: right;
-	padding-right: 0.5em;
+#tw-errors .line {
 	color: #FF8;
+    white-space: nowrap;
+    text-align: right;
 }
