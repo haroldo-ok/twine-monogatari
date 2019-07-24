@@ -185,6 +185,14 @@ var Parser = {
 
     return dict;
   },
+  
+  convertErrors: function(passages) {
+    // Collect all the errors together into a single array
+    return _(passages).flatMap(passage => {
+      return _([passage, passage.links, passage.commands, passage.config])
+        .flatten().compact().map('errors').flatten().compact().value();
+    }).compact().value();
+  },
 
   convertStory: function(story) {
     var convertedPassages = story.passages.map(Parser.convertPassage);
@@ -194,8 +202,13 @@ var Parser = {
       declarations: convertedPassages.filter(p => p.config).reduce((o, p) => {
         o[p.configKey] = p.config;
         return o;
-      }, {})
+      }, {})     
     };
+    
+    var errors = Parser.convertErrors(story.passages);
+    if (errors && errors.length) {
+      dict.errors = errors;
+    }
 
     return dict;
   },
