@@ -225,7 +225,7 @@ var Parser = {
   
   convertErrors: function(passages) {
     // Collect all the errors together into a single array
-    return _(passages).flatMap(passage => {
+    return _(passages).flatten().flatMap(passage => {
       return _([passage, passage.links, passage.commands, passage.config])
         .flatten().compact().map(o => {
           // Has no errors: skip.
@@ -260,7 +260,14 @@ var Parser = {
       }, {})     
     };
     
-    var errors = Parser.convertErrors(story.passages);
+    // Check if there is a "Start" passage
+    if (!_.find(dict.passages, p => p.name === 'Start')) {
+      ErrorHandler.simpleError(story, 
+        'Story must have a passage named "Start".',  {type: 'passage'});              
+    }
+
+    // Collect all errors together
+    var errors = Parser.convertErrors([story, story.passages]);
     if (errors && errors.length) {
       dict.errors = errors;
     }
