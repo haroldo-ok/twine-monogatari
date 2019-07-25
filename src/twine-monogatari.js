@@ -183,9 +183,18 @@ var Parser = {
     if (links) {
       dict.links = links;
     }
-
+    
+    // Check if passage name has space anywhere in its name
+    if (/\s/.test(dict.name)) {
+      ErrorHandler.simpleError(dict, 
+        'Passage name cannot contain whitespace.', 
+        {type: 'passage', passage: dict.name});        
+    }
+        
+    // Check if it is a special passage
     var specialPassage = /^\s*\[(\w+)\]\s*/.exec(dict.name);
     if (specialPassage) {
+      // It is a config passage: parse it as a config object
       try {
         dict.configKey = specialPassage[1];
         var config = Parser.extractConfigFromText(dict.text);
@@ -204,6 +213,7 @@ var Parser = {
           'Error parsing config: ' + e, data);        
       }
     } else {
+      // It is an ordinary passage: parse it into commands
       var commands = Parser.extractCommandsFromText(dict.text);
       if (commands) {
         dict.commands = commands;
