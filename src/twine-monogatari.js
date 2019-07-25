@@ -183,9 +183,18 @@ var Parser = {
     if (links) {
       dict.links = links;
     }
-
+    
+    // Check if passage name has space anywhere in its name
+    if (/\s/.test(dict.name)) {
+      ErrorHandler.simpleError(dict, 
+        'Passage name cannot contain whitespace.', 
+        {type: 'passage', passage: dict.name});        
+    }
+        
+    // Check if it is a special passage
     var specialPassage = /^\s*\[(\w+)\]\s*/.exec(dict.name);
     if (specialPassage) {
+      // It is a config passage: parse it as a config object
       try {
         dict.configKey = specialPassage[1];
         var config = Parser.extractConfigFromText(dict.text);
@@ -204,6 +213,7 @@ var Parser = {
           'Error parsing config: ' + e, data);        
       }
     } else {
+      // It is an ordinary passage: parse it into commands
       var commands = Parser.extractCommandsFromText(dict.text);
       if (commands) {
         dict.commands = commands;
@@ -215,7 +225,7 @@ var Parser = {
   
   convertErrors: function(passages) {
     // Collect all the errors together into a single array
-    return _(passages).flatMap(passage => {
+    return _(passages).flatten().flatMap(passage => {
       return _([passage, passage.links, passage.commands, passage.config])
         .flatten().compact().map(o => {
           // Has no errors: skip.
@@ -250,7 +260,14 @@ var Parser = {
       }, {})     
     };
     
-    var errors = Parser.convertErrors(story.passages);
+    // Check if there is a "Start" passage
+    if (!_.find(dict.passages, p => p.name === 'Start')) {
+      ErrorHandler.simpleError(story, 
+        'Story must have a passage named "Start".',  {type: 'passage'});              
+    }
+
+    // Collect all errors together
+    var errors = Parser.convertErrors([story, story.passages]);
     if (errors && errors.length) {
       dict.errors = errors;
     }
