@@ -56,6 +56,7 @@
 	padding-left: 0.5em;
 	padding-right: 0.5em;
     display: table-cell;
+    white-space: nowrap;
 }
 
 #tw-errors .passage {
@@ -64,10 +65,10 @@
 
 #tw-errors .message {
     display: table-cell;
+    width: 100%;
 }
 
 #tw-errors .line {
 	color: #FF8;
-    white-space: nowrap;
     text-align: right;
 }
