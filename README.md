@@ -21,20 +21,20 @@ Based on [Twison](https://github.com/lazerwalker/twison).
 
 ## Demo
 
-There's a demo available at: http://www.haroldo-ok.com/twine-monogatari/v0.1.0/demo.html
+There's a demo available at: https://haroldo-ok-2.github.io/twine-monogatari/v0.2.0/demo.html
 
 Youtube video for version 0.1.0: https://www.youtube.com/watch?v=cNW5hKvAsTo
 
 ## Install
 
-1. Open the Twine 2 online editor: http://twinery.org/2/  (for now, please use the HTTP version instead of the HTTPS version);
+1. Open the Twine 2 online editor: http://twinery.org/2/;
 2. On the left hand side, click on "Formats";
 3. Click on "Add new format";
-4. Inform the URL: http://www.haroldo-ok.com/twine-monogatari/v0.1.0/format.js
+4. Inform the URL: https://haroldo-ok-2.github.io/twine-monogatari/v0.2.0/format.js
 5. Click on "Add";
-6. Select "twine-monogatari 0.1.0".
+6. Select "twine-monogatari 0.2.0".
 
-Alternately, you could import the demo (http://www.haroldo-ok.com/twine-monogatari/v0.1.0/demo.html) on the editor.
+Alternately, you could import the demo (https://haroldo-ok-2.github.io/twine-monogatari/v0.2.0/demo.html) on the editor.
 
 ## Basic usage
 
